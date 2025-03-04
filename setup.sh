@@ -6,16 +6,16 @@ gcloud services enable bigquery.googleapis.com
 gcloud services enable bigquerydatatransfer.googleapis.com
 
 # Copy public dataset
-bq mk --force=true --dataset new1data
+bq mk --force=true --dataset dataset2
 bq mk \
   --transfer_config \
   --data_source=cross_region_copy \
-  --target_dataset=new1data \
+  --target_dataset=dataset2 \
   --display_name='SQL Talk Sample Data' \
   --schedule_end_time="$(date -u -d '5 mins' +%Y-%m-%dT%H:%M:%SZ)" \
   --params='{
       "source_project_id":"mltransit",
-      "source_dataset_id":"new1data",
+      "source_dataset_id":"dataset2",
       "overwrite_destination_table":"true"
       }'
 
