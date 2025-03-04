@@ -7,7 +7,7 @@ from google.cloud import bigquery
 from google.genai.types import FunctionDeclaration, GenerateContentConfig, Part, Tool
 import streamlit as st
 
-BIGQUERY_DATASET_ID = "new1data"
+BIGQUERY_DATASET_ID = "dataset2"
 MODEL_ID = "gemini-1.5-pro"
 LOCATION = "us-central1"
 
