@@ -138,7 +138,7 @@ if prompt := st.chat_input("Ask me about information in the database..."):
         client = bigquery.Client()
 
         prompt += """
-            I want the response to be complete and dont miss anything about what is asked and Only use information from BigQuery, and do not make up any data.
+            I want the response to be complete and dont miss anything about what is asked and Only use information from BigQuery dataset called dataset2 and dont use any public datasets, and do not make up any data.
             """
 
         try:
