@@ -1,5 +1,3 @@
-# pylint: disable=broad-exception-caught,invalid-name
-
 import time
 from google import genai
 from google.cloud import bigquery
@@ -13,7 +11,7 @@ BIGQUERY_DATASET_ID = "dataset2"
 MODEL_ID = "gemini-1.5-pro"
 LOCATION = "us-central1"
 
-# ✅ Fully qualified table names
+# ✅ Ensure correct table references (No duplication of project ID)
 ALLOWED_TABLES = {
     f"{BIGQUERY_PROJECT_ID}.{BIGQUERY_DATASET_ID}.table2",
   
@@ -82,7 +80,7 @@ if prompt := st.chat_input("Ask me about information in the database..."):
         prompt += f"""
         Only use tables from `{BIGQUERY_PROJECT_ID}.{BIGQUERY_DATASET_ID}` that are in the allowed list: 
         {", ".join(ALLOWED_TABLES)}.
-        Do NOT use any public datasets.Also Give me Concise and correct information from my tables.
+        Do NOT use any public datasets or unauthorized tables.
         """
 
         try:
