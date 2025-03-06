@@ -10,8 +10,8 @@ BIGQUERY_DATASET_ID = "dataset2"
 MODEL_ID = "gemini-1.5-pro"
 LOCATION = "us-central1"
 
-# Allowed tables for security
-ALLOWED_TABLES = {"table2"}  # ✅ Change this to your allowed tables
+# Allowed tables (fully qualified)
+ALLOWED_TABLES = {f"{BIGQUERY_DATASET_ID}.table1", f"{BIGQUERY_DATASET_ID}.table2", f"{BIGQUERY_DATASET_ID}.table3"}
 
 list_tables_func = FunctionDeclaration(
     name="list_tables",
@@ -75,7 +75,7 @@ if prompt := st.chat_input("Ask me about information in the database..."):
 
         prompt += """
         Only use tables from dataset2 that are in the allowed list:table2.
-        Do NOT use any public datasets or unapproved tables.Also I want the answer to be consise and correct.
+        Do NOT use any public datasets or unapproved tables.Also I want the answer to be consise and correct..
         """
 
         try:
@@ -90,13 +90,17 @@ if prompt := st.chat_input("Ask me about information in the database..."):
                     params = {key: value for key, value in response.function_call.args.items()}
 
                     if response.function_call.name == "list_tables":
-                        api_response = [t for t in ALLOWED_TABLES]  # ✅ Only allowed tables
+                        api_response = list(ALLOWED_TABLES)  # ✅ Now returns fully qualified tables
                         api_response = str(api_response)
 
                     if response.function_call.name == "sql_query":
                         query = params["query"]
 
-                        # ✅ Ensure the query uses only allowed tables
+                        # ✅ Ensure the query uses only allowed tables (fully qualified)
+                        for table in ALLOWED_TABLES:
+                            if table.split(".")[1] in query:  # Table name appears without dataset?
+                                query = query.replace(table.split(".")[1], table)  # Fix it
+
                         if not any(t in query for t in ALLOWED_TABLES):
                             raise ValueError("Unauthorized table used in query.")
 
@@ -126,3 +130,5 @@ if prompt := st.chat_input("Ask me about information in the database..."):
             error_message = f"Something went wrong: {str(e)}"
             st.error(error_message)
             st.session_state.messages.append({"role": "assistant", "content": error_message})
+
+
