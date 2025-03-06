@@ -83,7 +83,7 @@ if prompt := st.chat_input("Ask me about table2..."):
         bq_client = bigquery.Client()
 
         prompt += f"""
-            Only use table2 in dataset1. Do not access any other table.
+            Only use table2 in dataset2. Do not access any other table.
         """
         
         try:
